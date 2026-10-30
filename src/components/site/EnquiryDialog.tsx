@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "@tanstack/react-router";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,6 +24,7 @@ export function EnquiryDialog({ open, onClose, teacherProfileId, tutorName, subj
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<Partial<Record<"level" | "subject" | "message", string>>>({});
+  const [sentId, setSentId] = useState<string | null>(null);
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const levelOptions = levels.length ? levels : studentLevels;
 
@@ -40,13 +42,14 @@ export function EnquiryDialog({ open, onClose, teacherProfileId, tutorName, subj
     }
     setErrors({});
     setState("sending");
-    const { error } = await supabase.from("tutor_enquiries").insert({
+    const { data: created, error } = await supabase.from("tutor_enquiries").insert({
       teacher_profile_id: teacherProfileId,
       student_user_id: user?.id ?? null,
       education_level: parsed.data.level,
       subject: parsed.data.subject,
       message: parsed.data.message || null,
-    });
+    }).select("id").maybeSingle();
+    setSentId(created?.id ?? null);
     setState(error ? "error" : "sent");
   }
 
@@ -60,13 +63,30 @@ export function EnquiryDialog({ open, onClose, teacherProfileId, tutorName, subj
             <DialogDescription className="mt-2">
               Your enquiry has been saved for {tutorName}. They'll see it in their tutor dashboard.
             </DialogDescription>
-            <Button variant="pill" className="mt-6" onClick={close}>Done</Button>
+            {user ? (
+              <p className="mt-3 text-sm text-muted-foreground">Replies will appear in <strong>My Enquiries</strong> in your student area.</p>
+            ) : (
+              <p className="mt-3 rounded-xl bg-butter px-4 py-3 text-sm font-semibold">
+                You sent this as a guest, so the tutor can't reply to you here. To get private replies, sign in as a student and contact them again.
+              </p>
+            )}
+            <div className="mt-6 flex flex-wrap justify-center gap-2">
+              {user && sentId ? (
+                <Button variant="pill" asChild><Link to="/account/enquiries/$id" params={{ id: sentId }}>Open conversation</Link></Button>
+              ) : !user ? (
+                <Button variant="pill" asChild><Link to="/auth/student">Sign in as a student</Link></Button>
+              ) : null}
+              <Button variant="pill-outline" onClick={close}>Done</Button>
+            </div>
           </div>
         ) : (
           <>
             <DialogHeader>
               <DialogTitle>Connect with {tutorName}</DialogTitle>
-              <DialogDescription>Tell the tutor what you need help with. It only takes a moment.</DialogDescription>
+              <DialogDescription>
+                Tell the tutor what you need help with. It only takes a moment.
+                {!user && <> You can send this as a guest — <Link to="/auth/student" className="font-semibold text-primary underline">sign in</Link> first if you'd like to receive replies.</>}
+              </DialogDescription>
             </DialogHeader>
             <form onSubmit={submit} className="space-y-4" noValidate>
               <label className="block">
