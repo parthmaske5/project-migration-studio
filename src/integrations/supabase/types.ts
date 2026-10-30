@@ -14,6 +14,67 @@ export type Database = {
   }
   public: {
     Tables: {
+      enquiry_messages: {
+        Row: {
+          body: string
+          created_at: string
+          enquiry_id: string
+          id: string
+          sender_role: string
+          sender_user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          enquiry_id: string
+          id?: string
+          sender_role: string
+          sender_user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          enquiry_id?: string
+          id?: string
+          sender_role?: string
+          sender_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enquiry_messages_enquiry_id_fkey"
+            columns: ["enquiry_id"]
+            isOneToOne: false
+            referencedRelation: "tutor_enquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      enquiry_reads: {
+        Row: {
+          enquiry_id: string
+          last_read_at: string
+          user_id: string
+        }
+        Insert: {
+          enquiry_id: string
+          last_read_at?: string
+          user_id: string
+        }
+        Update: {
+          enquiry_id?: string
+          last_read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enquiry_reads_enquiry_id_fkey"
+            columns: ["enquiry_id"]
+            isOneToOne: false
+            referencedRelation: "tutor_enquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -158,6 +219,8 @@ export type Database = {
           created_at: string
           education_level: string
           id: string
+          last_message_at: string
+          last_sender_role: string
           message: string | null
           status: string
           student_user_id: string | null
@@ -168,6 +231,8 @@ export type Database = {
           created_at?: string
           education_level: string
           id?: string
+          last_message_at?: string
+          last_sender_role?: string
           message?: string | null
           status?: string
           student_user_id?: string | null
@@ -178,6 +243,8 @@ export type Database = {
           created_at?: string
           education_level?: string
           id?: string
+          last_message_at?: string
+          last_sender_role?: string
           message?: string | null
           status?: string
           student_user_id?: string | null
@@ -217,6 +284,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_enquiry: { Args: { _enquiry_id: string }; Returns: boolean }
+      enquiry_role: { Args: { _enquiry_id: string }; Returns: string }
+      has_enquired_teacher: {
+        Args: { _teacher_profile: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -224,6 +297,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_enquiring_student: { Args: { _student: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "student" | "teacher"
