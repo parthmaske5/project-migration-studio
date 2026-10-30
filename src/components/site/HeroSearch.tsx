@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Search } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { categories, popularSearches, type Category } from "@/data/sample";
 
@@ -8,9 +9,15 @@ export function HeroSearch() {
   const [q, setQ] = useState("");
   const [note, setNote] = useState("");
   const current = categories.find((c) => c.id === cat)!;
+  const navigate = useNavigate();
 
   const go = (e?: FormEvent, term = q) => {
     e?.preventDefault();
+    if (cat === "tutors") {
+      const t = term.trim();
+      navigate({ to: "/tutors", search: t ? { q: t } : {} });
+      return;
+    }
     setNote(term ? `Showing ${current.label.toLowerCase()} for “${term}”` : `Browsing all ${current.label.toLowerCase()}`);
     document.getElementById(current.anchor)?.scrollIntoView({ behavior: "smooth" });
   };

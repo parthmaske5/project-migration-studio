@@ -1,6 +1,6 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { RotateCcw, Search, SearchX, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site/SiteHeader";
@@ -27,6 +27,7 @@ export const Route = createFileRoute("/tutors/")({
     ],
     links: [{ rel: "canonical", href: URL }],
   }),
+  validateSearch: (s: Record<string, unknown>): { q?: string } => (typeof s.q === "string" && s.q.trim() ? { q: s.q.slice(0, 100) } : {}),
   loader: ({ context }) => context.queryClient.ensureQueryData(tutorsQuery),
   component: TutorsPage,
   errorComponent: TutorsError,
@@ -53,7 +54,14 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 
 function TutorsPage() {
   const { data: tutors } = useSuspenseQuery(tutorsQuery);
-  const [f, setF] = useState<TutorFilters>(defaultFilters);
+  const { q: urlQ } = Route.useSearch();
+  const navigate = useNavigate({ from: "/tutors/" });
+  const [f, setF] = useState<TutorFilters>(() => ({ ...defaultFilters, q: urlQ ?? "" }));
+  useEffect(() => { setF((p) => (p.q === (urlQ ?? "") ? p : { ...p, q: urlQ ?? "" })); }, [urlQ]);
+  useEffect(() => {
+    const next = f.q.trim() || undefined;
+    if (next !== urlQ) navigate({ search: next ? { q: next } : {}, replace: true });
+  }, [f.q]); // eslint-disable-line react-hooks/exhaustive-deps
   const set = <K extends keyof TutorFilters>(k: K, v: TutorFilters[K]) => setF((p) => ({ ...p, [k]: v }));
   const results = useMemo(() => filterTutors(tutors, f), [tutors, f]);
   const subjects = useMemo(() => Array.from(new Set(tutors.flatMap((t) => t.subjects))).sort(), [tutors]);

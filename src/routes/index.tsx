@@ -9,7 +9,10 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Section } from "@/components/site/Section";
 import { HeroSearch } from "@/components/site/HeroSearch";
-import { featuredTutors as tutors, materials, services, faqs } from "@/data/sample";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { materials, services, faqs } from "@/data/sample";
+import { TutorCard } from "@/components/site/TutorCard";
+import { tutorsQuery } from "@/routes/tutors.index";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,6 +25,7 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(tutorsQuery),
   component: Index,
 });
 
@@ -33,6 +37,8 @@ function Card({ to, className, children }: { to: string; className: string; chil
 const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
 function Index() {
+  const { data: allTutors } = useSuspenseQuery(tutorsQuery);
+  const tutors = allTutors.slice(0, 3);
   return (
     <div id="top" className="min-h-screen">
       <SiteHeader />
@@ -53,7 +59,7 @@ function Index() {
               <div className="mt-8"><HeroSearch /></div>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button variant="pill" size="xl" onClick={() => scrollTo("marketplace")}>Explore Now <ArrowRight /></Button>
-                <Button variant="pill-outline" size="xl" onClick={() => scrollTo("how-it-works")}>Become a Provider</Button>
+                <Button variant="pill-outline" size="xl" asChild><Link to="/auth/teacher" search={{ mode: "signup" }}>Sign up as an Educator</Link></Button>
               </div>
             </div>
             <div className="relative">
@@ -87,28 +93,18 @@ function Index() {
 
         {/* TUTORS */}
         <Section id="tutors" eyebrow="Featured tutors" title="Learn from passionate educators" action={<Button variant="pill-outline" asChild><Link to="/tutors">View all tutors</Link></Button>}>
-          <div className="grid gap-6 md:grid-cols-3">
-            {tutors.map((t) => (
-              <article key={t.name} className="card-soft overflow-hidden">
-                <img src={t.photo} alt={t.name} loading="lazy" width={816} height={816} className="aspect-[4/3] w-full object-cover" />
-                <div className="p-6">
-                  <h3 className="text-xl font-extrabold">{t.name}</h3>
-                  <p className="text-sm text-muted-foreground">{t.qualification}</p>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {t.subjects.map((s) => <span key={s} className="rounded-full bg-secondary px-3 py-1 text-xs font-bold text-secondary-foreground">{s}</span>)}
-                  </div>
-                  <div className="mt-4 space-y-1.5 text-sm text-muted-foreground">
-                    <p className="flex items-center gap-2"><Clock className="size-4" /> {t.experience} experience</p>
-                    <p className="flex items-center gap-2"><MapPin className="size-4" /> {t.mode}</p>
-                  </div>
-                  <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
-                    <p><span className="font-display text-2xl font-extrabold">RM{t.fee}</span><span className="text-sm text-muted-foreground">/hour</span></p>
-                    <Button variant="pill" asChild><Link to="/tutors">View Profile</Link></Button>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+          {tutors.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-3">
+              {tutors.map((t) => <TutorCard key={t.id} tutor={t} />)}
+            </div>
+          ) : (
+            <div className="card-soft mx-auto max-w-xl p-10 text-center">
+              <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-mint text-primary"><GraduationCap className="size-7" /></span>
+              <h3 className="mt-5 text-xl font-extrabold">Our first tutors are on their way</h3>
+              <p className="mt-2 text-muted-foreground">Tutors appear here once their profiles are complete and approved. Are you an educator? Be one of the first.</p>
+              <Button variant="pill" className="mt-6" asChild><Link to="/auth/teacher" search={{ mode: "signup" }}>Sign up as an Educator</Link></Button>
+            </div>
+          )}
         </Section>
 
         {/* MATERIALS */}
@@ -173,7 +169,7 @@ function Index() {
               </div>
             ))}
           </div>
-          <div className="mt-8 text-center"><Button variant="pill" size="xl">Become a Provider <ArrowRight /></Button></div>
+          <div className="mt-8 text-center"><Button variant="pill" size="xl" asChild><Link to="/auth/teacher" search={{ mode: "signup" }}>Sign up as an Educator <ArrowRight /></Link></Button></div>
         </Section>
 
         {/* MEMBERSHIP */}
