@@ -128,24 +128,28 @@ export function AuthForm({ role }: { role: AppRole }) {
   }
 
   if (stage === "add-role") {
+    const question =
+      role === "student"
+        ? "This email is currently registered as a Teacher. Would you like to continue and add a Student profile to your account?"
+        : "This email is currently registered as a Student. Would you like to create a Tutor profile with this account?";
     return (
-      <div className="card-soft w-full max-w-md p-8 text-center">
-        <span className={`mx-auto grid size-14 place-items-center rounded-2xl ${meta.tone} text-primary`}>
-          <meta.icon className="size-7" />
+      <div className="card-soft w-full max-w-md p-8 text-center" role="alertdialog" aria-labelledby="xrole-h" aria-describedby="xrole-d">
+        <span className={`mx-auto grid size-14 place-items-center rounded-2xl ${other.tone} text-primary`}>
+          <other.icon className="size-7" />
         </span>
-        <h1 className="mt-5 text-2xl font-extrabold">Add the {meta.label} role?</h1>
-        <p className="mt-3 text-muted-foreground">
-          This account doesn't have a {meta.label.toLowerCase()} profile yet. You can add one to your existing account —
-          no second email needed.
-        </p>
+        <h1 id="xrole-h" className="mt-5 text-2xl font-extrabold">You already have a {other.label.toLowerCase()} account</h1>
+        <p id="xrole-d" className="mt-3 text-muted-foreground">{question}</p>
         {error && <p className="mt-4 rounded-xl bg-destructive/10 px-4 py-2.5 text-sm font-semibold text-destructive">{error}</p>}
         <div className="mt-6 flex flex-col gap-2">
           <Button variant="pill" size="lg" onClick={handleAddRole} disabled={busy !== null}>
             {busy === "add-role" && <Loader2 className="animate-spin" />}
-            Add {meta.label} role to my account
+            Continue as {meta.label}
           </Button>
-          <Button variant="ghost" onClick={() => supabase.auth.signOut().then(() => setStage("form"))}>
-            Sign out and use a different account
+          <Button variant="pill-outline" size="lg" onClick={() => navigate({ to: other.area })} disabled={busy !== null}>
+            {role === "student" ? "Go to Teacher Dashboard instead" : "Go to Student Portal instead"}
+          </Button>
+          <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => supabase.auth.signOut().then(() => setStage("form"))}>
+            Sign out &amp; use a different email
           </Button>
         </div>
       </div>

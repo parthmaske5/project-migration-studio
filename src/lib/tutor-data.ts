@@ -102,6 +102,7 @@ export async function fetchApprovedTutors(): Promise<TutorDetail[]> {
     .from("teacher_profiles")
     .select("*")
     .eq("status", "approved")
+    .not("completed_at", "is", null)
     .order("updated_at", { ascending: false });
   if (error) throw error;
   return hydrate(data ?? []);
