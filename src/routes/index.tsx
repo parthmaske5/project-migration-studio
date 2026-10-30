@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { ArrowRight, BookOpen, Briefcase, Check, GraduationCap, MapPin, Clock, Quote, Search, UserPlus, MessageCircle, Sparkles } from "lucide-react";
-import heroAsset from "@/assets/hero.jpg.asset.json";
-const heroImg = heroAsset.url;
+import heroImg from "@/assets/hero.jpg";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SiteHeader } from "@/components/site/SiteHeader";
