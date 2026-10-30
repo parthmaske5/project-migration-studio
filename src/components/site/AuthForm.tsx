@@ -33,6 +33,10 @@ export function AuthForm({ role }: { role: AppRole }) {
     const roles = await getMyRoles(userId);
     if (roles.includes(role)) {
       navigate({ to: meta.area });
+    } else if (roles.length === 0) {
+      // They picked this role when signing up (e.g. before confirming email) — no need to ask again.
+      await ensureRoleProfile(userId, role);
+      navigate({ to: meta.area });
     } else {
       setStage("add-role");
     }
@@ -52,7 +56,7 @@ export function AuthForm({ role }: { role: AppRole }) {
         const { data, error: err } = await supabase.auth.signUp({
           email: email.trim(),
           password,
-          options: { data: { display_name: name.trim() }, emailRedirectTo: window.location.origin },
+          options: { data: { display_name: name.trim(), signup_role: role }, emailRedirectTo: window.location.origin },
         });
         if (err) throw err;
         if (!data.session) {
