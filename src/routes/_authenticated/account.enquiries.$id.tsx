@@ -139,7 +139,7 @@ function Conversation() {
         <div className="flex-1 space-y-3 py-6" aria-live="polite">
           {all.map((m, i) => {
             const mine = m.sender_role === myRole;
-            const showDay = i === 0 || dayLabel(all[i - 1].created_at) !== dayLabel(m.created_at);
+            const showDay = i === 0 || dayLabel(all[i - 1]!.created_at) !== dayLabel(m.created_at);
             const seen = mine && data.otherReadAt && new Date(data.otherReadAt) >= new Date(m.created_at);
             return (
               <div key={m.id}>
