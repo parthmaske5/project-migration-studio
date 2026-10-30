@@ -27,7 +27,7 @@ export const Route = createFileRoute("/tutors/")({
     ],
     links: [{ rel: "canonical", href: URL }],
   }),
-  validateSearch: (s: Record<string, unknown>): { q?: string } => (typeof s.q === "string" && s.q.trim() ? { q: s.q.slice(0, 100) } : {}),
+  validateSearch: (s: Record<string, unknown>): { q?: string } => (typeof s["q"] === "string" && s["q"].trim() ? { q: s["q"].slice(0, 100) } : {}),
   loader: ({ context }) => context.queryClient.ensureQueryData(tutorsQuery),
   component: TutorsPage,
   errorComponent: TutorsError,
