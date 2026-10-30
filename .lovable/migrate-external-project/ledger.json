@@ -1,0 +1,10 @@
+[
+{"capability":"code","source":"archive","outcome":"migrate","status":"verified","next_action":null},
+{"capability":"schema","source":"drizzle migrations","outcome":"migrate","status":"verified","next_action":null},
+{"capability":"records","source":"none attached","outcome":"migrate","status":"pending","next_action":"Request CSV/JSON exports of teacher_profiles, student_profiles, tutor_enquiries"},
+{"capability":"auth identities","source":"previous Lovable Cloud","outcome":"migrate","status":"pending","next_action":"Request user export (emails, original IDs, roles)"},
+{"capability":"authorization","source":"RLS + user_roles","outcome":"migrate","status":"verified","next_action":null},
+{"capability":"file storage","source":"tutor-photos bucket","outcome":"migrate","status":"implemented","next_action":"Uploaded photo bytes not included; re-upload by tutors"},
+{"capability":"site images","source":"old project CDN","outcome":"replaced","status":"verified","next_action":"Original images inaccessible; regenerated"},
+{"capability":"sign-in (email, Google, Lovable)","source":"Cloud auth","outcome":"migrate","status":"implemented","next_action":"Sign-up flow not exercised end-to-end"}
+]
