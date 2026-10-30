@@ -16,12 +16,12 @@ export const OAUTH_ROLE_KEY = "pupuk:oauth-role";
 
 type Stage = "form" | "check-email" | "add-role";
 
-export function AuthForm({ role }: { role: AppRole }) {
+export function AuthForm({ role, initialMode = "signin" }: { role: AppRole; initialMode?: "signin" | "signup" }) {
   const meta = roleMeta[role];
   const other = roleMeta[otherRole(role)];
   const navigate = useNavigate();
 
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup">(initialMode);
   const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

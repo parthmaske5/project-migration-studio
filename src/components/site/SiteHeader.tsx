@@ -12,7 +12,7 @@ export const navLinks = [
   { label: "Learning Materials", href: "/#materials" },
   { label: "Freelancers", href: "/#freelancers" },
   { label: "Membership", href: "/#membership" },
-  { label: "Become a Provider", href: "/#how-it-works" },
+  { label: "Sign up as an Educator", href: "/auth/teacher?mode=signup" },
 ];
 
 export function Logo() {

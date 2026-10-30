@@ -56,5 +56,5 @@ export const faqs = [
   { group: "Resources", q: "What kinds of learning materials are available?", a: "Worksheets, revision notes, templates, past-year style practice and more, created by educators and organised by subject and grade." },
   { group: "Membership", q: "What does the RM20/month membership include?", a: "Membership gives you access to all resources marked as eligible for membership. Some premium or individually priced resources may not be included — eligibility is shown on each item." },
   { group: "Membership", q: "Can I cancel my membership?", a: "Yes, you can cancel anytime. Your access continues until the end of your current billing month." },
-  { group: "Providers", q: "How do I become a provider?", a: "Click “Become a Provider”, choose whether you're a tutor, creator or freelancer, complete your profile and submit it for review." },
+  { group: "Providers", q: "How do I become a provider?", a: "Click “Sign up as an Educator”, create your account, complete your profile and submit it for review." },
 ];
