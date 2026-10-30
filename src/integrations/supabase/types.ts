@@ -298,6 +298,10 @@ export type Database = {
         Returns: boolean
       }
       is_enquiring_student: { Args: { _student: string }; Returns: boolean }
+      teacher_listing_complete: {
+        Args: { _t: Database["public"]["Tables"]["teacher_profiles"]["Row"] }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "student" | "teacher"

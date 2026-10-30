@@ -29,6 +29,13 @@
       "when": 1793378276163,
       "tag": "0003_enquiry_conversations",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793380089647,
+      "tag": "0004_listing_completeness_rules",
+      "breakpoints": true
     }
   ]
 }
