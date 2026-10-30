@@ -109,7 +109,7 @@ export async function fetchApprovedTutors(): Promise<TutorDetail[]> {
 
 export async function fetchTutor(id: string): Promise<TutorDetail | null> {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
-  const { data, error } = await supabase.from("teacher_profiles").select("*").eq("id", id).eq("status", "approved").maybeSingle();
+  const { data, error } = await supabase.from("teacher_profiles").select("*").eq("id", id).eq("status", "approved").not("completed_at", "is", null).maybeSingle();
   if (error) throw error;
   if (!data) return null;
   return (await hydrate([data]))[0] ?? null;
