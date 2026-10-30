@@ -212,8 +212,8 @@ function PhotoPicker({ userId, name, current, onSaved }: { userId: string; name:
 
   function choose(f: File | undefined) {
     if (!f) return;
-    if (!f.type.startsWith("image/")) return toast.error("Please choose an image file.");
-    if (f.size > 5 * 1024 * 1024) return toast.error("Photo must be under 5MB.");
+    if (!f.type.startsWith("image/")) { toast.error("Please choose an image file."); return; }
+    if (f.size > 5 * 1024 * 1024) { toast.error("Photo must be under 5MB."); return; }
     setFile(f);
   }
 
