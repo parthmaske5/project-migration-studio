@@ -15,3 +15,5 @@
 - Protected pages live under src/routes/_authenticated/ (client-only gate redirecting to /auth); role-specific auth pages are /auth/student and /auth/teacher with an /auth chooser.
 - Tutor directory (/tutors) and profiles (/tutors/$id) read approved teacher_profiles via the browser client under RLS (src/lib/tutor-data.ts); tutor photos live in the private `tutor-photos` bucket and are shown via signed URLs because public buckets are blocked.
 - Enquiries are rows in tutor_enquiries (guest or signed-in student), readable by the receiving tutor — the hook point for future notifications.
+- Enquiry conversations: replies live in enquiry_messages (sender role set by a DB trigger, which also updates tutor_enquiries.last_message_at/last_sender_role); read markers in enquiry_reads drive unread badges. Access is enforced by can_access_enquiry() (student, receiving tutor, admin). Guest enquiries cannot be replied to — guests must sign in and enquire again.
+- Sign-up stores the chosen role in user metadata (signup_role); handle_new_user creates the matching role + role profile so users are never asked to pick a role twice.
