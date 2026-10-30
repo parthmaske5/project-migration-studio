@@ -1,5 +1,20 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793371670354,
+      "tag": "0000_create_accounts_and_roles",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793373920715,
+      "tag": "0001_tutor_profile_details_and_enquiries",
+      "breakpoints": true
+    }
+  ]
 }
