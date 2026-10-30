@@ -17,3 +17,5 @@
 - Enquiries are rows in tutor_enquiries (guest or signed-in student), readable by the receiving tutor — the hook point for future notifications.
 - Enquiry conversations: replies live in enquiry_messages (sender role set by a DB trigger, which also updates tutor_enquiries.last_message_at/last_sender_role); read markers in enquiry_reads drive unread badges. Access is enforced by can_access_enquiry() (student, receiving tutor, admin). Guest enquiries cannot be replied to — guests must sign in and enquire again.
 - Sign-up stores the chosen role in user metadata (signup_role); handle_new_user creates the matching role + role profile so users are never asked to pick a role twice.
+- Tutor listings are public only when status='approved' AND completed_at IS NOT NULL; completed_at is stamped/cleared by a DB trigger (teacher_listing_complete), never by the client — keep src/lib/completeness.ts missingRequired in sync with it.
+- Cross-role sign-in (student on teacher page or vice versa) shows a choice card (continue / go to other area / sign out) in AuthForm and auth.callback; roles are never added silently when the account already has the other role.

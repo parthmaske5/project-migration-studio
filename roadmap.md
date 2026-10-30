@@ -13,3 +13,5 @@ Next step (not started, per spec): individual tutor profile page.
 - [x] Live approved tutors on /tutors with filters
 - [x] Public tutor profile page + Connect enquiry form
 - [x] Teachers can enter tagline, photo, levels, curricula, languages, skills, qualifications, achievements, availability
+- [x] Cross-role sign-in choice card; listings need complete + approved to be public
+- [x] Simplified teacher dashboard: photo picker, status banner, single Edit profile mode with inline sections
