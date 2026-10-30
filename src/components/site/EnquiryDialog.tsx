@@ -42,14 +42,22 @@ export function EnquiryDialog({ open, onClose, teacherProfileId, tutorName, subj
     }
     setErrors({});
     setState("sending");
-    const { data: created, error } = await supabase.from("tutor_enquiries").insert({
+    const row = {
       teacher_profile_id: teacherProfileId,
       student_user_id: user?.id ?? null,
       education_level: parsed.data.level,
       subject: parsed.data.subject,
       message: parsed.data.message || null,
-    }).select("id").maybeSingle();
-    setSentId(created?.id ?? null);
+    };
+    // Guests can't read enquiries back, so only ask for the new id when signed in.
+    let error;
+    if (user) {
+      const res = await supabase.from("tutor_enquiries").insert(row).select("id").single();
+      error = res.error;
+      setSentId(res.data?.id ?? null);
+    } else {
+      error = (await supabase.from("tutor_enquiries").insert(row)).error;
+    }
     setState(error ? "error" : "sent");
   }
 
